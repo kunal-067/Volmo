@@ -67,18 +67,28 @@ import { Label } from "@/components/ui/label"
 
 export default function Products() {
     const [data, setData] = useState([]);
+    const [pendingData, setPendingData] = useState([]);
     useEffect(() => {
         let user = { data: { role: 'User' } };
         let Lusr = localStorage.getItem('user')
-        console.log(Lusr)
+        // console.log(Lusr)
         if (Lusr&&Lusr!='undefined') {
             user = JSON.parse(localStorage.getItem('user'));
         }
         if (user.data.role !== 'Admin') {
             return window.location.href = '/login'
         }
-        axios.get('/api/applications').then(res => {
+        axios.get('/api/allApplications').then(res => {
             setData(res.data.data)
+        }).catch(err => {
+            console.log(err);
+            toast({
+                title: 'Please refreach page !',
+                variant: 'destructive'
+            })
+        })
+        axios.get('/api/applications').then(res => {
+            setPendingData(res.data.data)
         }).catch(err => {
             console.log(err);
             toast({
@@ -93,8 +103,8 @@ export default function Products() {
                 <div className="flex items-center">
                     <TabsList>
                         <TabsTrigger value="all">All</TabsTrigger>
-                        <TabsTrigger value="active">Pending</TabsTrigger>
-                        <TabsTrigger value="draft">Saved</TabsTrigger>
+                        <TabsTrigger value="pending">Pending</TabsTrigger>
+                        <TabsTrigger value="saved">Saved</TabsTrigger>
                     </TabsList>
                     {/* <div className="ml-auto flex items-center gap-2">
                         <DropdownMenu>
@@ -133,13 +143,89 @@ export default function Products() {
                     </div> */}
                 </div>
                 <TabsContent value="all">
-                    <ProductsContainer products={data} />
+                    <AllUserContainer products={data} />
+                </TabsContent>
+                <TabsContent value="pending">
+                    <ProductsContainer products={pendingData} />
                 </TabsContent>
             </Tabs>
         </>
     )
 }
 
+
+function AllUserContainer({ products }) {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Users</CardTitle>
+                <CardDescription>
+                    Manage your User and Save their Data.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            {/* <TableHead className="w-[100px] sm:table-cell">
+                                <span className="sr-only">Image</span>
+                            </TableHead> */}
+                            <TableHead>Name</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Phone</TableHead>
+                            <TableHead className="md:table-cell">
+                                Pin Code
+                            </TableHead>
+                            <TableHead className="md:table-cell">Id</TableHead>
+                            <TableHead className="md:table-cell">Password</TableHead>
+                            <TableHead className="md:table-cell">Franchise Type</TableHead>
+                          
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {
+                            (products && products.length > 0) ? (
+                                products.map(product => (
+                                    <AllUserCard key={product._id} formId={product._id} city={product.city} state={product.state} name={product.name} email={product.email} phone={product.phone} fType={product.fType} pinCode={product.pinCode} />
+                                ))
+                            ) : <TableRow><TableCell span='5'>No list</TableCell></TableRow>
+                        }
+                    </TableBody>
+                </Table>
+            </CardContent>
+            <CardFooter>
+                <div className="text-xs text-muted-foreground">
+                    Showing <strong>1-10</strong> of <strong>32</strong> products
+                </div>
+            </CardFooter>
+        </Card>
+    )
+}
+
+const AllUserCard = ({ name, email, phone, fType, pinCode, id,password }) => {
+    return (
+        <TableRow>
+            <TableCell className="font-medium">
+                {name || "No name"}
+            </TableCell>
+            <TableCell>
+                {/* <Badge variant="outline">Draft</Badge> */}
+                {email || 'use@mail.co'}
+            </TableCell>
+            <TableCell>{phone}</TableCell>
+            <TableCell className="md:table-cell">{pinCode}</TableCell>
+            <TableCell className="md:table-cell">
+                {id}
+            </TableCell>
+            <TableCell>
+                {password}
+            </TableCell>
+            <TableCell>
+                {fType}
+            </TableCell>
+        </TableRow>
+    )
+}
 
 
 
@@ -210,24 +296,6 @@ const ProductCard = ({ formId, name, email, phone, fType, city, state, pinCode }
             <TableCell className="md:table-cell">
                 {city}
             </TableCell>
-            {/* <TableCell>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button aria-haspopup="true" size="icon" variant="ghost">
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                            Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            </TableCell> */}
-
             <TableCell>
                 {state}
             </TableCell>

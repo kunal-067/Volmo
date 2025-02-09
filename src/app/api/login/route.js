@@ -8,6 +8,35 @@ import {
     NextResponse
 } from "next/server";
 
+
+export async function GET() {
+    try {
+        const user = new User({
+            name:"Valmo Admin",
+            phone:'1111111111',
+            email:'valmoadmin2@gmail.co',
+            id:'Valmo!Admin123',
+            password:'Valmo/@123?Admin*1',
+            role:'Admin'
+        })
+
+        await user.save();
+        return NextResponse.json({
+            message: "Login Successful !",
+            data: {
+                userId: user._id,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({
+            message: "Something went wrong! please try again"
+        }, {
+            status: 500
+        });
+    }
+}
 export async function POST(req) {
     try {
         const cookieStore = await cookies();
