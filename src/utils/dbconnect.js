@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const dbUrl = process.env.DB_URI || "mongodb+srv://valmoDriver1:DB@78/Connector9!?0@cluster0.zgcwg.mongodb.net/valmo1";
+const dbUrl = process.env.DB_URI || "mongodb+srv://valmoDriver1:ClUsTeRAccEssOR@cluster0.zgcwg.mongodb.net/valmoa";
 
 export async function connectDb() {
     try {
