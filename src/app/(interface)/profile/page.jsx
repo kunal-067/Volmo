@@ -41,7 +41,7 @@ function page() {
             toast({
                 title:res.data.message
             })
-            window.location.href = '/profile'
+            window.location.href = '/home'
 
         }).catch(err => {
             console.log(err);
