@@ -20,8 +20,8 @@ function page() {
     useEffect(() => {
         axios.get('/api/user').then(res => {
             const data = res.data.data;
-            const { id, email, phone, refundAmount, state, address, pinCode, fType, status } = data
-            setId(id); setEmail(email); setPhone(phone); setRefundAmount(refundAmount);
+            const { id, email,name, phone, refundAmount, state, address, pinCode, fType, status } = data
+            setName(name);setId(id); setEmail(email); setPhone(phone); setRefundAmount(refundAmount);
             setState(state); setAddress(address); setPinCode(pinCode); setFtype(fType); setStatus(status);
             setPdf(() => modifyPdfUrl(data.pdf))
         }).catch(err => {
